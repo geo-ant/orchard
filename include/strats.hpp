@@ -6,7 +6,19 @@
 namespace orchard
 {
 
+/**
+ * Picking strategy that picks the fruits in ascending
+ * order of index (starting with 0).
+ */
 class in_order_picking_strategy : public picking_strategy
+{
+public:
+
+	game_state pick_fruits(game_state &&) const override;
+
+};
+
+class random_picking_strategy : public picking_strategy
 {
 public:
 

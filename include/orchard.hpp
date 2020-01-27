@@ -56,7 +56,7 @@ public:
 	unsigned int get_raven_count() const;
 
 	//! get number of fruit on given tree
-	unsigned int get_fruit_count(size_t tree_index) const;
+	unsigned int get_fruit_count_at(size_t tree_index) const;
 
 	//! constant iterators for the fruit count
 	auto fruit_cbegin() const
@@ -74,7 +74,6 @@ private:
 
 	//! number of raven cards on board
 	unsigned int raven_count;
-
 };
 
 /**

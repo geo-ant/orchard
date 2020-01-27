@@ -1,7 +1,6 @@
 #include "orchard.hpp"
 #include <iostream>
-#include <chrono>
-#include <random>
+#include "random_numbers.hpp"
 
 
 namespace orchard
@@ -36,16 +35,14 @@ namespace orchard
 	 */
 	size_t roll_die()
 	{
-	    static thread_local std::mt19937 generator(std::chrono::system_clock::now().time_since_epoch().count());
-	    std::uniform_int_distribution<size_t> distribution(0,RAVEN);
-	    return distribution(generator);
+	    return get_uniform_random_number<size_t>(0,RAVEN);
 	}
 
 	/**
 	 * performs a game turn depending on dice result and user strategy
-	 *
+	 * (separated from play to finish to facilitate testing)
 	 */
-	inline game_state perform_single_turn(game_state && game,  const picking_strategy & strategy, size_t dice_result)
+	game_state perform_single_turn(game_state && game,  const picking_strategy & strategy, size_t dice_result)
 	{
 
 		if(is_fruit(dice_result))
@@ -64,11 +61,6 @@ namespace orchard
 
 	game_state play_to_finish(game_state && game, const picking_strategy & strategy)
 	{
-#ifdef DEBUG
-		std::cout << game << std::endl;
-#endif
-
-
 		if(is_over(game))
 		{
 			return game;
@@ -78,7 +70,9 @@ namespace orchard
 		game_state next = perform_single_turn(std::move(game), strategy, dice_result);
 
 #ifdef DEBUG
-		std::cout << "dice = " << dice_result << std::endl;
+		std::cout << "(" << game << ")";
+		std::cout << " => [" << dice_result << "] => ";
+		std::cout << "(" << next << ")" << std::endl;
 #endif
 
 		return play_to_finish(std::move(next), strategy);

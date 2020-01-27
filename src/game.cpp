@@ -93,7 +93,7 @@ unsigned int game_state::get_raven_count() const
 }
 
 //get number of fruit on given tree
-unsigned int game_state::get_fruit_count(size_t tree_index) const
+unsigned int game_state::get_fruit_count_at(size_t tree_index) const
 {
 	return fruit_count.at(tree_index);
 }

@@ -38,3 +38,5 @@ eclipse/
 .project
 Debug/
 Release/
+bin/
+obj/
