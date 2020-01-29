@@ -2,6 +2,7 @@
 #define _ORCHARD_HPP_INCLUDED
 
 #include <array>
+#include <functional>
 
 //forward declaration
 class ostream;
@@ -76,6 +77,9 @@ private:
 	unsigned int raven_count;
 };
 
+using strategy_t = std::function<game_state(game_state&&)>;
+
+
 /**
  * abstract class that represents a picking strategy
  * that comes into play if (and only if) the basket
@@ -111,7 +115,7 @@ bool is_lost(const game_state &);
  * Otherwise plays according to the rules
  * @returns the game state on win or lose
  */
-game_state play_to_finish(game_state &&, const picking_strategy & strategy);
+game_state play_to_finish(strategy_t strategy, game_state &&);
 
 }
 

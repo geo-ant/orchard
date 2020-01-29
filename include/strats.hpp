@@ -2,29 +2,20 @@
 #define _STRATS_HPP_INCLUDED
 
 #include "orchard.hpp"
+#include <functional>
 
 namespace orchard
 {
 
 /**
- * Picking strategy that picks the fruits in ascending
+ * Picking strategy that picks 2 fruits in ascending
  * order of index (starting with 0).
  */
-class in_order_picking_strategy : public picking_strategy
-{
-public:
-
-	game_state pick_fruits(game_state &&) const override;
-
-};
-
-class random_picking_strategy : public picking_strategy
-{
-public:
-
-	game_state pick_fruits(game_state &&) const override;
-
-};
+game_state pick_fruit_in_order(game_state && g);
+/**
+ * Picking 2 fruits at random
+ */
+game_state pick_fruit_at_random(game_state && g);
 
 }
 #endif //_STRATS_HPP_INCLUDED

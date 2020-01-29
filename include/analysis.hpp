@@ -3,6 +3,9 @@
 
 #include "orchard.hpp"
 #include <atomic>
+#include <optional>
+#include <iterator>
+#include <functional>
 
 
 namespace orchard
@@ -12,40 +15,75 @@ class game_generator;
 
 class game_iterator
 {
-
+public:
 	/**
 	 * create iterator with position 0 and
-	 * default constructed intial game state
+	 * invalid game state. This iterator
+	 * is not dereferencable. This is to
+	 * comply to DefaultConstructible requirement
+	 * of LegacyInputIterator
 	 */
-	game_iterator();
+	game_iterator() = default;
+
+	game_iterator(const game_iterator & ) = default;
+	game_iterator & operator=(const game_iterator &) = default;
+	game_iterator(game_iterator &&) = default;
+	game_iterator & operator=(game_iterator &&) = default;
+
+	/**
+	 * Compare equality
+	 * @return true iff iterators have same position or if both
+	 * have invalid position. The game state is discarded in this
+	 * copmarison.
+	 */
+	bool operator==(const game_iterator &);
+	bool operator!=(const game_iterator &);
+
 
 	/**
 	 * Returns a game_state that is played to
 	 * finish from the initial state. Each invokation
-	 * of the operator* will probably return a random
-	 * game_state that is played to finish
+	 * of the operator* will most likely return a different
+	 * (random) game_state that is played to finish
 	 */
-	game_state operator*() const;
+	game_state operator*();
 
 	//! prefix increment: ++it
 	game_iterator& operator++();
 
 	//! postfix increment: it++
-	game_iterator operator++(int);
+	game_iterator operator++(int) const;
 
+	/*
+	 * Create an end iterator with no valid game state
+	 * and invalid strategy at position pos.
+	 */
+	static game_iterator create_end_iterator(unsigned int pos);
 
+	/**
+	 * Create a begin iterator at position 0 (zero) with a given
+	 * initial state.
+	 */
+	static game_iterator create_begin_iterator(std::function<game_state(game_state&&)> strategy, const game_state & initial);
 
 private:
+
+
 	/**
-	 * Initialize game iterator with initial state and position 0
+	 * Create game iterator with given intial state and
+	 * position.
 	 */
-	game_iterator(const game_state initial_state, size_t pos = 0);
+	game_iterator(std::function<game_state(game_state&&)> strategy, std::optional<game_state>  initial, unsigned int position);
 
-	long position;
-	game_state state;
-	std::atomic<bool> was_played_to_finish;
+	//! function pointer to picking strategy
+	std::function<game_state(game_state&&)> strategy;
 
-	friend class game_generator;
+	//! optional because end iterators have no game state
+	std::optional<game_state> initial_state = std::nullopt;
+	//! position. Is optional because default constructed iterator has no valid pos
+	std::optional<long> position = std::nullopt;
+
+
 };
 
 class game_generator
@@ -57,6 +95,7 @@ class game_generator
 	 */
 	game_generator(size_t cnt);
 
+	//game_iterator cbegin()
 
 
 
@@ -65,6 +104,21 @@ private:
 
 };
 
-}
+}//namespace orchard
+
+namespace std
+{
+	template<>
+	struct iterator_traits<::orchard::game_iterator>
+	{
+		using difference_type = long;
+		using value_type = ::orchard::game_state;
+		using reference = ::orchard::game_state; //my iterator does not return a true reference
+		using pointer   = const ::orchard::game_state &;
+		using iterator_category = std::input_iterator_tag;
+	};
+
+} //namespace std
+
 
 #endif //_ANALYSIS_HPP_INCLUDED

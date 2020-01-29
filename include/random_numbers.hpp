@@ -13,7 +13,8 @@ template<typename T>
 T get_uniform_random_number(T minimum, T maximum)
 {
 	using thread_id_hash = std::hash<std::thread::id>;
-	static thread_local T seed = std::chrono::system_clock::now().time_since_epoch().count() + thread_id_hash()(std::this_thread::get_id());
+	static thread_local std::random_device rd;
+	static thread_local T seed = rd() + std::chrono::system_clock::now().time_since_epoch().count() + thread_id_hash()(std::this_thread::get_id());
 	static thread_local std::mt19937 generator(seed);
 	std::uniform_int_distribution<T> distribution(minimum,maximum);
 	return distribution(generator);

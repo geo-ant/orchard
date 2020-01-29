@@ -10,11 +10,19 @@ int main() {
 	using std::endl;
 
 	orchard::game_state g;
-	orchard::in_order_picking_strategy order_strat;
-	orchard::random_picking_strategy rnd_strat;
-	orchard::game_state g_finish = orchard::play_to_finish(std::move(g), order_strat);
+	//orchard::game_state g_finish = orchard::play_to_finish(orchard::pick_fruit_in_order, std::move(g));
 
 
-	cout << g_finish << endl;
+	auto begin_it = orchard::game_iterator::create_begin_iterator(orchard::pick_fruit_in_order, std::move(g));
+	auto end_it = orchard::game_iterator::create_end_iterator(2);
+
+	for(auto it = begin_it; it != end_it; ++it)
+	{
+		cout << "*** NEW GAME:" << endl;
+		cout << (*it) << endl << endl;
+	}
+
+
+	//cout << g_finish << endl;
 	return 0;
 }
