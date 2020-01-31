@@ -2,6 +2,7 @@
 #define _ANALYSIS_HPP_INCLUDED
 
 #include "orchard.hpp"
+#include "strats.hpp"
 #include <atomic>
 #include <optional>
 #include <iterator>
@@ -64,7 +65,7 @@ public:
 	 * Create a begin iterator at position 0 (zero) with a given
 	 * initial state.
 	 */
-	static game_iterator create_begin_iterator(std::function<game_state(game_state&&)> strategy, const game_state & initial);
+	static game_iterator create_begin_iterator(strategy_t strategy, const game_state & initial);
 
 private:
 
@@ -88,19 +89,21 @@ private:
 
 class game_generator
 {
+public:
 	/**
 	 * Create a game generator
 	 * that generates a number of games
 	 * @param cnt number of games to create
 	 */
-	game_generator(size_t cnt);
+	game_generator(strategy_t strat, game_state initial, size_t cnt);
 
-	//game_iterator cbegin()
-
-
+	game_iterator cbegin();
+	
+	game_iterator cend();
 
 private:
-	const size_t count;
+	game_iterator begin_it;
+	game_iterator end_it;
 
 };
 

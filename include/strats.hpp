@@ -7,6 +7,8 @@
 namespace orchard
 {
 
+using strategy_t = std::function<game_state(game_state&&)>;
+
 /**
  * Picking strategy that picks 2 fruits in ascending
  * order of index (starting with 0).

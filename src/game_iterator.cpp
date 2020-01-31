@@ -46,7 +46,7 @@ game_iterator game_iterator::create_end_iterator(unsigned int pos)
 
 game_iterator game_iterator::create_begin_iterator(std::function<game_state(game_state&&)> strategy, const game_state & initial)
 {
-	return 	game_iterator(strategy, initial, 0);
+	return game_iterator(strategy, initial, 0);
 }
 
 
