@@ -1,5 +1,5 @@
-#ifndef _ANALYSIS_HPP_INCLUDED
-#define _ANALYSIS_HPP_INCLUDED
+#ifndef _GENERATOR_HPP_INCLUDED
+#define _GENERATOR_HPP_INCLUDED
 
 #include "orchard.hpp"
 #include "strats.hpp"
@@ -107,6 +107,9 @@ private:
 
 };
 
+
+
+
 }//namespace orchard
 
 namespace std
@@ -124,4 +127,4 @@ namespace std
 } //namespace std
 
 
-#endif //_ANALYSIS_HPP_INCLUDED
+#endif //_GENERATOR_HPP_INCLUDED

@@ -35,8 +35,8 @@ public:
 	/** 
 	 * construct new game_state with given amount of fruits and ravens
 	 * */
-	game_state(std::array<unsigned int, TREE_COUNT> && fruits, unsigned int ravens);
-	game_state(const std::array<unsigned int, TREE_COUNT> & fruits, unsigned int ravens);
+	game_state(std::array<unsigned int, TREE_COUNT> && fruits, unsigned int ravens, unsigned int turns=0);
+	game_state(const std::array<unsigned int, TREE_COUNT> & fruits, unsigned int ravens, unsigned int turns=0);
 
 	/*
 	 * Pick a number of fruits from a tree. The amount of fruit never drops
@@ -44,14 +44,14 @@ public:
 	 * @returns new game_state state with the correct amount of fruits after picking
 	 */
 	game_state pick_fruit(size_t tree_index, unsigned int amount=1) const &;
-	game_state pick_fruit(size_t tree_index, unsigned int amount=1) const &&;
+	const game_state & pick_fruit(size_t tree_index, unsigned int amount=1) const &&;
 	
 	/*
 	 * Add a raven card to the game_state
 	 * @returns new game_state state with the number of ravens decreased by one
 	 */
 	game_state add_raven() const &;
-	game_state add_raven() const &&;
+	const game_state & add_raven() const &&;
 	
 	//! get number of raven cards
 	unsigned int get_raven_count() const;
@@ -74,28 +74,14 @@ private:
 	mutable std::array<unsigned int, TREE_COUNT> fruit_count;
 
 	//! number of raven cards on board
-	unsigned int raven_count;
+	mutable unsigned int raven_count;
+	
+	// number of turns in the game
+	mutable unsigned int turn_count;
 };
 
 using strategy_t = std::function<game_state(game_state&&)>;
 
-
-/**
- * abstract class that represents a picking strategy
- * that comes into play if (and only if) the basket
- * was rolled with the die.
- */
-class picking_strategy
-{
-public:
-	virtual ~picking_strategy() {};
-	/**
-	 * This method of a picking strategy should
-	 * pick the fruits according to the strategy
-	 * and return the new game state.
-	 */
-	virtual game_state pick_fruits(game_state &&) const = 0;
-};
 
 /**
  * Free functions
@@ -117,7 +103,7 @@ bool is_lost(const game_state &);
  */
 game_state play_to_finish(strategy_t strategy, game_state &&);
 
-}
+} //namespace orchard
 
 //for printing the game state to console
 std::ostream & operator<<(std::ostream & os, const orchard::game_state & g);

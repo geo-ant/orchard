@@ -24,10 +24,16 @@ namespace orchard
 game_state::game_state() : fruit_count(create_filled_array<unsigned int, TREE_COUNT>(INITIAL_FRUIT_COUNT)), raven_count(INITIAL_RAVEN_COUNT)
 {}
 
-game_state::game_state(std::array<unsigned int, TREE_COUNT> && fruits, unsigned int ravens) : fruit_count(std::move(fruits)), raven_count(std::move(ravens))
+game_state::game_state(std::array<unsigned int, TREE_COUNT> && fruits, unsigned int ravens, unsigned int turns)
+: fruit_count(std::move(fruits)),
+raven_count(std::move(ravens)),
+turn_count(turns)
 {}
 
-game_state::game_state(const std::array<unsigned int, TREE_COUNT> & fruits, unsigned int ravens) : fruit_count(fruits), raven_count(std::move(ravens))
+game_state::game_state(const std::array<unsigned int, TREE_COUNT> & fruits, unsigned int ravens, unsigned int turns)
+: fruit_count(fruits)
+,raven_count(std::move(ravens)),
+turn_count(turns)
 {}
 
 /*
@@ -48,10 +54,10 @@ game_state game_state::pick_fruit(size_t tree_index, unsigned int amount) const 
 		new_fruit_count[tree_index] = 0;
 	}
 
-	return game_state(std::move(new_fruit_count), raven_count);
+	return game_state(std::move(new_fruit_count), raven_count, turn_count+1);
 }
 
-game_state game_state::pick_fruit(size_t tree_index, unsigned int amount) const &&
+const game_state & game_state::pick_fruit(size_t tree_index, unsigned int amount) const &&
 {
 	if(fruit_count.at(tree_index)>= amount)
 	{
@@ -61,6 +67,7 @@ game_state game_state::pick_fruit(size_t tree_index, unsigned int amount) const 
 	{
 		fruit_count[tree_index] = 0;
 	}
+	++turn_count;
 	return *this;
 }
 
@@ -74,16 +81,18 @@ game_state game_state::add_raven() const &
 	{
 		throw std::overflow_error("Amount of higher than max number of raven cards!");
 	}
-	return game_state(fruit_count, raven_count+1);
+	return game_state(std::move(fruit_count), raven_count+1);
 }
 
-game_state game_state::add_raven() const &&
+const game_state & game_state::add_raven() const &&
 {
 	if(raven_count +1 > MAX_RAVEN_COUNT)
 	{
 		throw std::overflow_error("Amount of higher than max number of raven cards!");
 	}
-	return game_state(std::move(fruit_count), raven_count+1);
+	++turn_count;
+	++raven_count;
+	return *this;
 }
 
 //! get number of raven cards
