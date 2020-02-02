@@ -1,21 +1,27 @@
-
 #include <iostream>
 #include <algorithm>
 #include "orchard.hpp"
 #include "strats.hpp"
 #include "generator.hpp"
+#include "analysis.hpp"
+#include "statistics.hpp"
+
 
 int main() {
 	using std::cout;
+	using std::cin;
 	using std::endl;
+	using namespace orchard;
+	
+	cout << "Number of Games to Simulate:" << endl;
+	cout << "N = ";
+	size_t cnt = 0;
+	cin >> cnt;
 
-	orchard::game_state g;
-	//orchard::game_state g_finish = orchard::play_to_finish(orchard::pick_fruit_in_order, std::move(g));
+	auto wlstat = accumulate_statistics<orchard::win_loss_statistic>(pick_fruit_at_random,cnt);
 	
-	auto gen = orchard::game_generator(orchard::pick_fruit_in_order,g,3);
-	
-	std::for_each(gen.cbegin(), gen.cend(), [](const auto & g){cout<<g<<endl;});
-	
+	cout << "STATISTICS:" << endl;
+	cout << "Wins: " << wlstat.get_wins() << " Losses: " << wlstat.get_losses() << endl;
 
 	//cout << g_finish << endl;
 	return 0;
