@@ -5,6 +5,7 @@
 #include "generator.hpp"
 #include <numeric>
 #include <functional>
+#include <execution>
 
 namespace orchard
 {
@@ -31,7 +32,7 @@ template<typename statistic_t>
 statistic_t accumulate_statistics(strategy_t strategy, size_t amount, const game_state & initial = game_state(), statistic_t initial_statistics = statistic_t())
 {
 	game_generator games(strategy, initial, amount);
-	auto result = std::transform_reduce(games.cbegin(),games.cend(), initial_statistics, std::plus<statistic_t>(), [](const game_state & g){return statistic_t(g);});
+	auto result = std::transform_reduce(std::execution::seq,games.cbegin(),games.cend(), initial_statistics, std::plus<statistic_t>(), [](const game_state & g){return statistic_t(g);});
 	return result;
 }
 	 
