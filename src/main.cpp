@@ -1,7 +1,7 @@
 #include <iostream>
 #include <algorithm>
 #include "orchard.hpp"
-#include "strats.hpp"
+#include "strategies.hpp"
 #include "generator.hpp"
 #include "analysis.hpp"
 #include "statistics.hpp"
@@ -18,7 +18,7 @@ int main() {
 	size_t cnt = 0;
 	cin >> cnt;
 
-	auto wlstat = accumulate_statistics<orchard::win_loss_statistic>(pick_fruit_at_random,cnt);
+	auto wlstat = accumulate_statistics<win_loss_statistic>(pick_fruit_at_random,cnt);
 	
 	cout << "STATISTICS:" << endl;
 	cout << "Wins: " << wlstat.get_wins() << " Losses: " << wlstat.get_losses() << endl;

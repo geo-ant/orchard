@@ -11,13 +11,13 @@ namespace orchard
 {
 
 //! number of trees with fruits
-constexpr unsigned int TREE_COUNT = 4;
+constexpr int TREE_COUNT = 4;
 //! number of raven cards at which the game_state is lost
-constexpr unsigned int MAX_RAVEN_COUNT = 9;
+constexpr int MAX_RAVEN_COUNT = 9;
 //! number of initial fruits
-constexpr unsigned int INITIAL_FRUIT_COUNT = 10;
+constexpr int INITIAL_FRUIT_COUNT = 10;
 //! number of initial ravens
-constexpr unsigned int INITIAL_RAVEN_COUNT = 0;
+constexpr int INITIAL_RAVEN_COUNT = 0;
 
 
 
@@ -54,10 +54,13 @@ public:
 	const game_state & add_raven() const &&;
 	
 	//! get number of raven cards
-	unsigned int get_raven_count() const;
+	int get_raven_count() const;
 
 	//! get number of fruit on given tree
-	unsigned int get_fruit_count_at(size_t tree_index) const;
+	int get_fruit_count_at(size_t tree_index) const;
+
+	//! get total number of fruit on the trees
+	int get_total_fruit_count() const;
 
 	//! constant iterators for the fruit count
 	auto fruit_cbegin() const

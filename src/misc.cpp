@@ -9,7 +9,7 @@ namespace orchard
 	//! return true iff the game was won by the players
 	bool is_won(const game_state & g)
 	{
-		return 0==std::accumulate(g.fruit_cbegin(), g.fruit_cend(), static_cast<unsigned int>(0));
+		return 0==g.get_total_fruit_count();
 	}
 
 	//! return true iff the game was won by the raven

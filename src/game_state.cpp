@@ -1,7 +1,7 @@
 #include "orchard.hpp"
 
 #include <stdexcept>
-
+#include <numeric>
 
 /**
  * create an array std::array<T,N> filled with the
@@ -96,15 +96,20 @@ const game_state & game_state::add_raven() const &&
 }
 
 //! get number of raven cards
-unsigned int game_state::get_raven_count() const
+int game_state::get_raven_count() const
 {
 	return raven_count;
 }
 
 //get number of fruit on given tree
-unsigned int game_state::get_fruit_count_at(size_t tree_index) const
+int game_state::get_fruit_count_at(size_t tree_index) const
 {
 	return fruit_count.at(tree_index);
+}
+
+int game_state::get_total_fruit_count() const
+{
+	return std::accumulate(fruit_cbegin(), fruit_cend(), 0);
 }
 
 }//namespace

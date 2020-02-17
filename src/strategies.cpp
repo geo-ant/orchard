@@ -1,10 +1,14 @@
-#include "strats.hpp"
+#include "random_numbers.hpp"
+#include "strategies.hpp"
 #include <optional>
 #include <algorithm>
-#include "random_numbers.hpp"
+#include <functional>
 
 namespace orchard
 {
+
+//using index_function_t = std::function<std::optional(const game_state&)>;
+
 
 std::optional<size_t> find_first_non_empty_tree_index(const game_state & g)
 {

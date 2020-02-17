@@ -2,7 +2,7 @@
 #define _GENERATOR_HPP_INCLUDED
 
 #include "orchard.hpp"
-#include "strats.hpp"
+#include "strategies.hpp"
 #include <atomic>
 #include <optional>
 #include <iterator>
