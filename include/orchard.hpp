@@ -43,15 +43,13 @@ public:
 	 * below 0 bu nothing happens if the request is made on a tree with 0 fruit.
 	 * @returns new game_state state with the correct amount of fruits after picking
 	 */
-	game_state pick_fruit(size_t tree_index, unsigned int amount=1) const &;
-	const game_state & pick_fruit(size_t tree_index, unsigned int amount=1) const &&;
+	game_state pick_fruit(size_t tree_index, unsigned int amount=1) const;
 	
 	/*
 	 * Add a raven card to the game_state
 	 * @returns new game_state state with the number of ravens decreased by one
 	 */
-	game_state add_raven() const &;
-	const game_state & add_raven() const &&;
+	game_state add_raven() const;
 	
 	//! get number of raven cards
 	int get_raven_count() const;
@@ -74,13 +72,13 @@ public:
 
 private:
 	//! the number of fruits on the trees
-	mutable std::array<unsigned int, TREE_COUNT> fruit_count;
+	std::array<unsigned int, TREE_COUNT> fruit_count;
 
 	//! number of raven cards on board
-	mutable unsigned int raven_count;
+	unsigned int raven_count;
 	
 	// number of turns in the game
-	mutable unsigned int turn_count;
+	unsigned int turn_count;
 };
 
 using strategy_t = std::function<game_state(game_state&&)>;

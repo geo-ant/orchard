@@ -40,7 +40,7 @@ turn_count(turns)
  * Pick a number of fruits from a tree
  * @returns new game_state state with the correct amount of fruits after picking
  */
-game_state game_state::pick_fruit(size_t tree_index, unsigned int amount) const &
+game_state game_state::pick_fruit(size_t tree_index, unsigned int amount) const
 {
 
 	std::array<unsigned int, TREE_COUNT> new_fruit_count(fruit_count);
@@ -57,43 +57,19 @@ game_state game_state::pick_fruit(size_t tree_index, unsigned int amount) const 
 	return game_state(std::move(new_fruit_count), raven_count, turn_count+1);
 }
 
-const game_state & game_state::pick_fruit(size_t tree_index, unsigned int amount) const &&
-{
-	if(fruit_count.at(tree_index)>= amount)
-	{
-		fruit_count[tree_index]-= amount;
-	}
-	else
-	{
-		fruit_count[tree_index] = 0;
-	}
-	++turn_count;
-	return *this;
-}
-
 /*
  * Add a raven card to the game_state
  * @returns new game_state state with the number of ravens decreased by one
  */
-game_state game_state::add_raven() const &
+game_state game_state::add_raven() const
 {
 	if(raven_count +1 > MAX_RAVEN_COUNT)
 	{
 		throw std::overflow_error("Amount of higher than max number of raven cards!");
 	}
-	return game_state(std::move(fruit_count), raven_count+1);
+	return game_state(std::move(fruit_count), raven_count+1, turn_count+1);
 }
 
-const game_state & game_state::add_raven() const &&
-{
-	if(raven_count +1 > MAX_RAVEN_COUNT)
-	{
-		throw std::overflow_error("Amount of higher than max number of raven cards!");
-	}
-	++turn_count;
-	++raven_count;
-	return *this;
-}
 
 //! get number of raven cards
 int game_state::get_raven_count() const

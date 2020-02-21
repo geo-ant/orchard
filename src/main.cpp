@@ -1,3 +1,5 @@
+#ifndef _MAKE_TESTS
+
 #include <iostream>
 #include <algorithm>
 #include "orchard.hpp"
@@ -26,3 +28,4 @@ int main() {
 	//cout << g_finish << endl;
 	return 0;
 } 
+#endif //_MAKE_TESTS
