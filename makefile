@@ -4,12 +4,15 @@ SRC_DIR=src
 INC_DIR=include
 OBJ_DIR=obj
 BIN_DIR=bin
+TEST_SRC_DIR=test
+MAIN_CPP_NAME=main.cpp
 
 CC=g++
 LD=g++
-CFLAGS=-O2 -c -Wall -std=c++17
+CFLAGS=-c -Wall -std=c++17
+OPTIM_LEVEL = -O2
 LFLGAS=
-DFLAGS=-g3 -O0 -DDEBUG
+DFLAGS=-g3 -O0 -c -DDEBUG -Wall -std=c++17
 INCFLAGS=-I$(INC_DIR)
 
 SOURCES=$(wildcard $(SRC_DIR)/*.cpp)
@@ -19,12 +22,12 @@ DEPENDS=$(OBJ_DIR)/.depends
 
 
 .PHONY: all
+all:CFLAGS+=$(OPTIM_LEVEL)
 all: $(BIN_DIR)/$(APP)
 
 .PHONY: debug
 debug: CFLAGS+=$(DFLAGS)
 debug: all
-
 
 $(BIN_DIR)/$(APP): $(OBJECTS) | $(BIN_DIR)
 	$(LD) $(LFLGAS) -o $@ $^
