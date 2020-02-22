@@ -35,15 +35,15 @@ public:
 	/** 
 	 * construct new game_state with given amount of fruits and ravens
 	 * */
-	game_state(std::array<unsigned int, TREE_COUNT> && fruits, unsigned int ravens, unsigned int turns=0);
-	game_state(const std::array<unsigned int, TREE_COUNT> & fruits, unsigned int ravens, unsigned int turns=0);
+	game_state(std::array<unsigned int, TREE_COUNT> && fruits, unsigned int ravens, unsigned int turns);
+	game_state(const std::array<unsigned int, TREE_COUNT> & fruits, unsigned int ravens, unsigned int turns);
 
 	/*
-	 * Pick a number of fruits from a tree. The amount of fruit never drops
+	 * Pick one fruit from a tree. The amount of fruit never drops
 	 * below 0 bu nothing happens if the request is made on a tree with 0 fruit.
 	 * @returns new game_state state with the correct amount of fruits after picking
 	 */
-	game_state pick_fruit(size_t tree_index, unsigned int amount=1) const;
+	game_state pick_fruit(size_t tree_index) const;
 	
 	/*
 	 * Add a raven card to the game_state

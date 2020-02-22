@@ -21,7 +21,7 @@ constexpr std::array<T,N> create_filled_array(T value)
 namespace orchard
 {
 
-game_state::game_state() : fruit_count(create_filled_array<unsigned int, TREE_COUNT>(INITIAL_FRUIT_COUNT)), raven_count(INITIAL_RAVEN_COUNT)
+game_state::game_state() : fruit_count(create_filled_array<unsigned int, TREE_COUNT>(INITIAL_FRUIT_COUNT)), raven_count(INITIAL_RAVEN_COUNT), turn_count(0)
 {}
 
 game_state::game_state(std::array<unsigned int, TREE_COUNT> && fruits, unsigned int ravens, unsigned int turns)
@@ -40,14 +40,14 @@ turn_count(turns)
  * Pick a number of fruits from a tree
  * @returns new game_state state with the correct amount of fruits after picking
  */
-game_state game_state::pick_fruit(size_t tree_index, unsigned int amount) const
+game_state game_state::pick_fruit(size_t tree_index) const
 {
 
 	std::array<unsigned int, TREE_COUNT> new_fruit_count(fruit_count);
 
-	if(new_fruit_count.at(tree_index)>= amount)
+	if(new_fruit_count.at(tree_index)>= 1)
 	{
-		new_fruit_count[tree_index]-= amount;
+		new_fruit_count[tree_index]-= 1;
 	}
 	else
 	{
