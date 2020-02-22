@@ -1,11 +1,13 @@
+ifneq ($(MAKECMDGOALS),test)
 APP=orchard
+else
+APP=test
+endif
 
 SRC_DIR=src
 INC_DIR=include
 OBJ_DIR=obj
 BIN_DIR=bin
-TEST_SRC_DIR=test
-MAIN_CPP_NAME=main.cpp
 
 CC=g++
 LD=g++
@@ -28,6 +30,10 @@ all: $(BIN_DIR)/$(APP)
 .PHONY: debug
 debug: CFLAGS+=$(DFLAGS)
 debug: all
+
+.PHONY: test
+test: CFLAGS+= -DMAKE_TESTS
+test: all
 
 $(BIN_DIR)/$(APP): $(OBJECTS) | $(BIN_DIR)
 	$(LD) $(LFLGAS) -o $@ $^

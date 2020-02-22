@@ -60,6 +60,9 @@ public:
 	//! get total number of fruit on the trees
 	int get_total_fruit_count() const;
 
+	//! get number of turns played
+	int get_turn_count() const;
+
 	//! constant iterators for the fruit count
 	auto fruit_cbegin() const
 	{

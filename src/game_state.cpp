@@ -71,17 +71,21 @@ game_state game_state::add_raven() const
 }
 
 
-//! get number of raven cards
 int game_state::get_raven_count() const
 {
 	return raven_count;
 }
 
-//get number of fruit on given tree
 int game_state::get_fruit_count_at(size_t tree_index) const
 {
 	return fruit_count.at(tree_index);
 }
+
+int game_state::get_turn_count() const
+{
+	return turn_count;
+}
+
 
 int game_state::get_total_fruit_count() const
 {
