@@ -21,7 +21,7 @@ int main() {
 	size_t cnt = 0;
 	cin >> cnt;
 
-	auto wlstat = accumulate_statistics<win_loss_statistic>(pick_fruit_at_random,cnt);
+	auto wlstat = accumulate_statistics<win_loss_statistic>(pick_fruit_in_order,cnt);
 	
 	cout << "STATISTICS:" << endl;
 	cout << "Wins: " << wlstat.get_wins() << " Losses: " << wlstat.get_losses() << endl;

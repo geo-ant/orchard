@@ -74,10 +74,10 @@ private:
 	 * Create game iterator with given intial state and
 	 * position.
 	 */
-	game_iterator(std::function<game_state(game_state&&)> strategy, std::optional<game_state>  initial, unsigned int position);
+	game_iterator(strategy_t strategy, std::optional<game_state>  initial, unsigned int position);
 
 	//! function pointer to picking strategy
-	std::function<game_state(game_state&&)> strategy;
+	strategy_t strategy;
 
 	//! optional because end iterators have no game state
 	std::optional<game_state> initial_state = std::nullopt;

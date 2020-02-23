@@ -8,7 +8,7 @@ namespace orchard
 constexpr long INVALID_POSITION = -1;
 
 
-game_iterator::game_iterator(std::function<game_state(game_state&&)> strat, std::optional<game_state> initial, unsigned int pos)
+game_iterator::game_iterator(strategy_t strat, std::optional<game_state> initial, unsigned int pos)
 :strategy(strat), initial_state(initial), position(pos)
 {}
 
@@ -25,7 +25,7 @@ bool game_iterator::operator !=(const game_iterator& other)
 
 game_state game_iterator::operator*()
 {
-	return play_to_finish(strategy, std::move(initial_state.value()));
+	return play_to_finish(strategy, initial_state.value());
 }
 
 game_iterator& game_iterator::operator++()
@@ -41,10 +41,10 @@ game_iterator game_iterator::operator++(int) const
 
 game_iterator game_iterator::create_end_iterator(unsigned int pos)
 {
-	return game_iterator(std::function<game_state(game_state&&)>(), std::nullopt, pos);
+	return game_iterator(std::function<game_state(const game_state&)>(), std::nullopt, pos);
 }
 
-game_iterator game_iterator::create_begin_iterator(std::function<game_state(game_state&&)> strategy, const game_state & initial)
+game_iterator game_iterator::create_begin_iterator(strategy_t strategy, const game_state & initial)
 {
 	return game_iterator(strategy, initial, 0);
 }

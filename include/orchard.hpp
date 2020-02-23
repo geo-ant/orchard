@@ -25,7 +25,6 @@ class game_state
 {
 public:
 
-
 	/**
 	 * construct game_state with INITIAL_FRUIT_COUNT fruits on each
 	 * tree and zero ravens. This is the start configuration
@@ -33,58 +32,40 @@ public:
 	game_state();
 
 	/** 
-	 * construct new game_state with given amount of fruits and ravens
+	 * construct new game_state with given amount of fruits, ravens and turns
+	 * @throws underflow_error or overflow_error if values are outside legal ranges
 	 * */
-	game_state(std::array<unsigned int, TREE_COUNT> && fruits, unsigned int ravens, unsigned int turns);
-	game_state(const std::array<unsigned int, TREE_COUNT> & fruits, unsigned int ravens, unsigned int turns);
+	game_state(const std::array<int, TREE_COUNT> & fruits, int ravens, int turns);
 
 	/*
-	 * Pick one fruit from a tree. The amount of fruit never drops
-	 * below 0 bu nothing happens if the request is made on a tree with 0 fruit.
+	 * Pick one piece of fruit from a given tree.
+	 * @throws std::underflow_error if fruit count would drop below 0
 	 * @returns new game_state state with the correct amount of fruits after picking
 	 */
 	game_state pick_fruit(size_t tree_index) const;
 	
 	/*
 	 * Add a raven card to the game_state
+	 * @throws std::overflow error if raven count increases beyond MAX_RAVEN_COUNT
 	 * @returns new game_state state with the number of ravens decreased by one
 	 */
 	game_state add_raven() const;
 	
-	//! get number of raven cards
-	int get_raven_count() const;
-
-	//! get number of fruit on given tree
-	int get_fruit_count_at(size_t tree_index) const;
-
-	//! get total number of fruit on the trees
+	//! get total number of fruit summed over all trees
 	int get_total_fruit_count() const;
 
-	//! get number of turns played
-	int get_turn_count() const;
-
-	//! constant iterators for the fruit count
-	auto fruit_cbegin() const
-	{
-		return fruit_count.cbegin();
-	}
-	auto fruit_cend() const
-	{
-		return fruit_count.cend();
-	}
-
-private:
+public:
 	//! the number of fruits on the trees
-	std::array<unsigned int, TREE_COUNT> fruit_count;
+	const std::array<int, TREE_COUNT> fruit_count;
 
 	//! number of raven cards on board
-	unsigned int raven_count;
+	const unsigned int raven_count;
 	
 	// number of turns in the game
-	unsigned int turn_count;
+	const unsigned int turn_count;
 };
 
-using strategy_t = std::function<game_state(game_state&&)>;
+using strategy_t = std::function<game_state(const game_state&)>;
 
 
 /**
@@ -105,7 +86,7 @@ bool is_lost(const game_state &);
  * Otherwise plays according to the rules
  * @returns the game state on win or lose
  */
-game_state play_to_finish(strategy_t strategy, game_state &&);
+game_state play_to_finish(strategy_t strategy, const game_state &);
 
 } //namespace orchard
 

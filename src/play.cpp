@@ -42,12 +42,12 @@ namespace orchard
 	 * performs a game turn depending on dice result and user strategy
 	 * (separated from play to finish to facilitate testing)
 	 */
-	game_state perform_single_turn(strategy_t strategy, game_state && game,  size_t dice_result)
+	game_state perform_single_turn(strategy_t strategy, const game_state & game,  size_t dice_result)
 	{
 
 		if(is_fruit(dice_result))
 		{
-			return game.pick_fruit(dice_result);
+			return (game.fruit_count.at(dice_result)>=1) ? game.pick_fruit(dice_result) : game;
 		}
 		else if(is_raven(dice_result))
 		{
@@ -55,11 +55,11 @@ namespace orchard
 		}
 		else
 		{
-			return strategy(std::move(game));
+			return strategy(game);
 		}
 	}
 
-	game_state play_to_finish(strategy_t strategy, game_state && game)
+	game_state play_to_finish(strategy_t strategy, const game_state & game)
 	{
 		if(is_over(game))
 		{
@@ -67,7 +67,7 @@ namespace orchard
 		}
 
 		const auto dice_result = roll_die();
-		game_state next = perform_single_turn(strategy, std::move(game), dice_result);
+		game_state next = perform_single_turn(strategy, game, dice_result);
 
 #ifdef DEBUG
 		std::cout << "(" << game << ")";
@@ -75,7 +75,7 @@ namespace orchard
 		std::cout << "(" << next << ")" << std::endl;
 #endif
 
-		return play_to_finish(strategy, std::move(next));
+		return play_to_finish(strategy, next);
 
 	}
 
