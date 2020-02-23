@@ -47,7 +47,7 @@ namespace orchard
 
 		if(is_fruit(dice_result))
 		{
-			return (game.fruit_count.at(dice_result)>=1) ? game.pick_fruit(dice_result) : game;
+			return (game.fruit_count.at(dice_result)>0) ? game.pick_fruit(dice_result) : game;
 		}
 		else if(is_raven(dice_result))
 		{
