@@ -1,4 +1,4 @@
-#include "random_numbers.hpp"
+#include "dice.hpp"
 #include "strategies.hpp"
 #include <optional>
 #include <algorithm>

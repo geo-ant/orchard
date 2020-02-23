@@ -67,7 +67,6 @@ public:
 
 using strategy_t = std::function<game_state(const game_state&)>;
 
-
 /**
  * Free functions
  */
@@ -79,14 +78,6 @@ bool is_won(const game_state &);
 //! return true iff the game_state was won by the raven
 bool is_lost(const game_state &);
 
-/**
- * performs a game turn depending on dice result and user strategy
- * (separated from play to finish to facilitate testing)
- * @param dice_result Result of the die in [0, TREE_COUNT+1]: [0, TREE_COUNT-1] implies to pick
- * one single fruit from tree with given index. If dice_result is TREE_COUNT
- * implies fruit basket (pick 2 with strategy) and TREE_COUNT+1 implies raven.
- */
-game_state perform_single_turn(strategy_t strategy, const game_state & game,  size_t dice_result);
 
 
 /**
