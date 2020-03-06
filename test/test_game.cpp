@@ -1,4 +1,3 @@
-#ifdef MAKE_TESTS
 #include "catch2/catch.hpp"
 
 #include "orchard.hpp"
@@ -120,6 +119,3 @@ TEST_CASE("Classification of games as won / lost / over", "[game_state]")
 	}
 
 }
-
-
-#endif

@@ -54,7 +54,6 @@ public:
 	//! get total number of fruit summed over all trees
 	int get_total_fruit_count() const;
 
-public:
 	//! the number of fruits on the trees
 	const std::array<int, TREE_COUNT> fruit_count;
 

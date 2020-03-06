@@ -1,5 +1,3 @@
-#ifndef MAKE_TESTS
-
 
 #include <iostream>
 #include <algorithm>
@@ -28,8 +26,4 @@ int main() {
 
 	//cout << g_finish << endl;
 	return 0;
-} 
-#else
-#define CATCH_CONFIG_MAIN
-#include "catch2/catch.hpp"
-#endif
+}
