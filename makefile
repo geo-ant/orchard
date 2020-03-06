@@ -22,7 +22,6 @@ HEADERS=$(wildcard $(INC_DIR)/*.hpp)
 OBJECTS=$(SOURCES:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 DEPENDS=$(OBJ_DIR)/.depends
 
-
 .PHONY: all
 all:CFLAGS+=$(OPTIM_LEVEL)
 all: $(BIN_DIR)/$(APP)
@@ -30,10 +29,6 @@ all: $(BIN_DIR)/$(APP)
 .PHONY: debug
 debug: CFLAGS+=$(DFLAGS)
 debug: all
-
-.PHONY: test
-test: CFLAGS+= -DMAKE_TESTS
-test: all
 
 $(BIN_DIR)/$(APP): $(OBJECTS) | $(BIN_DIR)
 	$(LD) $(LFLGAS) -o $@ $^

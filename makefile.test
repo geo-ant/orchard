@@ -1,0 +1,53 @@
+ifneq ($(MAKECMDGOALS),test)
+APP=orchard
+else
+APP=test
+endif
+
+SRC_DIR=src
+TEST_SRC_DIR=test
+INC_DIR=include
+OBJ_DIR=obj
+BIN_DIR=bin
+MAIN_CPP_NAME=main.cpp
+
+CC=g++
+LD=g++
+CFLAGS=-c -Wall -std=c++17
+OPTIM_LEVEL = -O2
+LFLGAS=
+DFLAGS=-g3 -O0 -c -DDEBUG -Wall -std=c++17
+INCFLAGS=-I$(INC_DIR)
+
+SOURCES:=$(wildcard $(SRC_DIR)/*.cpp) # this will be src/main.cpp src/func.cpp
+NON_MAIN_SOURCES:=$(filter-out $(SRC_DIR)/$(MAIN_CPP_NAME), $(SOURCES)) # this will be src/func.cpp
+TEST_DIR_SOURCES:=$(wildcard $(TEST_SRC_DIR)/*.cpp) # this will be test/unit.cpp test/global.cpp
+TEST_SOURCES:=$(notdir $(NON_MAIN_SOURCES) $(TEST_DIR_SOURCES)) # this will be func.cpp unit.cpp global.cpp
+TEST_OBJECTS:=$(patsubst %.cpp,$(OBJ_DIR)/%.o,$(TEST_SOURCES)) # this will be obj/func.o obj/unit.o obj/global.o
+
+.PHONY: all
+all:CFLAGS+=$(OPTIM_LEVEL) -DMAKE_TESTS
+all: $(BIN_DIR)/test
+
+$(BIN_DIR)/test: $(TEST_OBJECTS)
+	mkdir -p $(@D)
+	$(LD) $(LFLAGS) -o $@ $^
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
+	mkdir -p $(@D)
+	$(CC) $(CFLAGS) $(INCFLAGS) -o $@ $<
+
+$(OBJ_DIR)/%.o: $(TEST_SRC_DIR)/%.cpp
+	mkdir -p $(@D)
+	$(CC) $(CFLAGS) $(INCFLAGS) -o $@ $<
+
+$(DEPENDS): $(TEST_SOURCES) | $(OBJ_DIR)
+	$(CC) $(INCFLAGS) -MM $(TEST_SOURCES) | sed -e 's!^!$(OBJ_DIR)/!' >$@
+
+ifneq ($(MAKECMDGOALS),clean)
+-include $(DEPENDS)
+endif
+
+.PHONY: clean
+clean:
+	rm -rf $(BIN_DIR) $(OBJ_DIR)

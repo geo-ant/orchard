@@ -1,6 +1,8 @@
 #ifndef _RANDOM_NUMBERS_HPP_INCLUDED
 #define _RANDOM_NUMBERS_HPP_INCLUDED
 
+#include "orchard.hpp"
+
 #include <chrono>
 #include <random>
 #include <thread>
@@ -30,6 +32,9 @@ T get_uniform_random_number(T minimum, T maximum)
 class dice_result
 {
 public:
+	static constexpr int FRUIT_BASKET = TREE_COUNT;
+	static constexpr int RAVEN = TREE_COUNT+1;
+
 	/**
 	 * construct a dice result corresponding
 	 * to a certain number. The numbers [0, TREE_COUNT-1]

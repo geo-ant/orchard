@@ -26,12 +26,12 @@ bool dice_result::is_tree_index() const
 
 bool dice_result::is_fruit_basket() const
 {
-	return result == TREE_COUNT;
+	return result == FRUIT_BASKET;
 }
 
 bool dice_result::is_raven() const
 {
-	return result == TREE_COUNT+1;
+	return result == RAVEN;
 }
 
 int dice_result::get_tree_index() const
