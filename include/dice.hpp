@@ -1,5 +1,5 @@
-#ifndef _RANDOM_NUMBERS_HPP_INCLUDED
-#define _RANDOM_NUMBERS_HPP_INCLUDED
+#ifndef _DICE_HPP_INCLUDED
+#define _DICE_HPP_INCLUDED
 
 #include "orchard.hpp"
 
@@ -7,6 +7,7 @@
 #include <random>
 #include <thread>
 #include <string>
+#include <optional>
 
 class ostream; //forward declaration
 
@@ -64,10 +65,10 @@ public:
 	/**
 	 * Returns the index of the tree that the dice picked
 	 * if is_tree_index()==true. Otherwise throws an exception
-	 * @throws std::logic_error if is_tree_index()==false
-	 * @return the tree index
+	 * @return the tree index iff is_tree_index() is true,
+	 * else returns nullopt.
 	 */
-	int get_tree_index() const;
+	std::optional<int> get_tree_index() const;
 
 	std::string to_string() const;
 
@@ -85,4 +86,4 @@ private:
 
 
 
-#endif //_MISC_HPP_INCLUDED
+#endif //_DICE_HPP_INCLUDED

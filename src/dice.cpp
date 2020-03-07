@@ -34,7 +34,7 @@ bool dice_result::is_raven() const
 	return result == RAVEN;
 }
 
-int dice_result::get_tree_index() const
+std::optional<int> dice_result::get_tree_index() const
 {
 	if(is_tree_index())
 	{
@@ -42,7 +42,7 @@ int dice_result::get_tree_index() const
 	}
 	else
 	{
-		throw std::logic_error("Requested tree index for dice result that is not a tree index!");
+		return {};
 	}
 }
 
