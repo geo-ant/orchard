@@ -1,15 +1,27 @@
 #include "orchard.hpp"
 #include "generator.hpp"
-
+#include <new>
 
 namespace orchard
 {
 
 constexpr long INVALID_POSITION = -1;
 
+//!helper function for initialization of finished game state upon construction
+std::optional<game_state> play_to_finish_wrapper(strategy_t strat, const std::optional<game_state> & initial)
+{
+	if(initial.has_value() && strat)
+	{
+		return play_to_finish(strat,initial.value());
+	}
+	else
+	{
+		return {};
+	}
+}
 
 game_iterator::game_iterator(strategy_t strat, std::optional<game_state> initial, unsigned int pos)
-:strategy(strat), initial_state(initial), position(pos)
+:strategy(strat), initial_state(initial), final_state(play_to_finish_wrapper(strat,initial)), position(pos)
 {}
 
 
@@ -25,18 +37,23 @@ bool game_iterator::operator !=(const game_iterator& other)
 
 game_state game_iterator::operator*()
 {
-	return play_to_finish(strategy, initial_state.value());
+	return final_state.value();
 }
 
-game_iterator& game_iterator::operator++()
+//prefix: ++it
+game_iterator game_iterator::operator++()
 {
+	final_state.emplace(play_to_finish(strategy,initial_state.value()));
 	position = position.value()+1;
 	return *this;
 }
 
-game_iterator game_iterator::operator++(int) const
+//postfix: it++
+game_iterator game_iterator::operator++(int)
 {
-	return game_iterator(strategy, initial_state.value(), position.value()+1);
+	game_iterator copy(*this);
+	++(*this);
+	return copy;
 }
 
 game_iterator game_iterator::create_end_iterator(unsigned int pos)

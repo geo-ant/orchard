@@ -31,6 +31,9 @@ public:
 	 */
 	game_state();
 
+	game_state(const game_state &) = default;
+	game_state(game_state &&) = default;
+
 	/** 
 	 * construct new game_state with given amount of fruits, ravens and turns
 	 * @throws underflow_error or overflow_error if values are outside legal ranges
