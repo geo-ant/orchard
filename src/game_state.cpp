@@ -51,8 +51,6 @@ turn_count(turns)
 
 }
 
-
-
 game_state game_state::pick_fruit(size_t tree_index) const
 {
 	std::array<int, TREE_COUNT> new_fruit_count(fruit_count);

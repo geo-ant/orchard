@@ -16,7 +16,7 @@ std::optional<game_state> play_to_finish_wrapper(strategy_t strat, const std::op
 	}
 	else
 	{
-		return {};
+		return std::nullopt;
 	}
 }
 
