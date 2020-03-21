@@ -19,7 +19,15 @@ constexpr int INITIAL_FRUIT_COUNT = 10;
 //! number of initial ravens
 constexpr int INITIAL_RAVEN_COUNT = 0;
 
+//forward decl
+class game_state;
 
+
+//!array that holds the fruit counts for the trees
+using tree_array_t = std::array<int, TREE_COUNT>;
+
+//! strategy type
+using strategy_t = std::function<tree_array_t(const tree_array_t&)>;
 
 class game_state
 {
@@ -34,11 +42,11 @@ public:
 	game_state(const game_state &) = default;
 	game_state(game_state &&) = default;
 
-	/** 
+	/**
 	 * construct new game_state with given amount of fruits, ravens and turns
 	 * @throws underflow_error or overflow_error if values are outside legal ranges
 	 * */
-	game_state(const std::array<int, TREE_COUNT> & fruits, int ravens, int turns);
+	game_state(const std::array<int, TREE_COUNT> fruits, int ravens, int turns);
 
 	/*
 	 * Pick one piece of fruit from a given tree.
@@ -54,20 +62,30 @@ public:
 	 */
 	game_state add_raven() const;
 	
+	/**
+	 * Create a new game state with the picking
+	 * strategy applied. The turn count is increased by 1.
+	 * @return game state as described above.
+	 */
+	game_state apply_strategy(strategy_t strat) const;
+
 	//! get total number of fruit summed over all trees
 	int get_total_fruit_count() const;
 
 	//! the number of fruits on the trees
-	const std::array<int, TREE_COUNT> fruit_count;
+	const tree_array_t fruit_count;
 
 	//! number of raven cards on board
 	const int raven_count;
 	
 	// number of turns in the game
 	const int turn_count;
+
+private:
+
+
 };
 
-using strategy_t = std::function<game_state(const game_state&)>;
 
 /**
  * Free functions

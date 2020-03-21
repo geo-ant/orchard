@@ -25,7 +25,7 @@ namespace orchard
 game_state::game_state() : game_state(create_filled_array<int, TREE_COUNT>(INITIAL_FRUIT_COUNT), INITIAL_RAVEN_COUNT, 0)
 {}
 
-game_state::game_state(const std::array<int, TREE_COUNT> & fruits, int ravens, int turns)
+game_state::game_state(const std::array<int, TREE_COUNT> fruits, int ravens, int turns)
 : fruit_count(fruits)
 ,raven_count(ravens),
 turn_count(turns)
@@ -51,13 +51,10 @@ turn_count(turns)
 
 }
 
-/*
- * Pick a number of fruits from a tree
- * @returns new game_state state with the correct amount of fruits after picking
- */
+
+
 game_state game_state::pick_fruit(size_t tree_index) const
 {
-
 	std::array<int, TREE_COUNT> new_fruit_count(fruit_count);
 	if(new_fruit_count.at(tree_index)>= 1)
 	{
@@ -71,10 +68,6 @@ game_state game_state::pick_fruit(size_t tree_index) const
 	return game_state(new_fruit_count, raven_count, turn_count+1);
 }
 
-/*
- * Add a raven card to the game_state
- * @returns new game_state state with the number of ravens decreased by one
- */
 game_state game_state::add_raven() const
 {
 	if(raven_count +1 > MAX_RAVEN_COUNT)
@@ -88,5 +81,12 @@ int game_state::get_total_fruit_count() const
 {
 	return std::accumulate(fruit_count.cbegin(), fruit_count.cend(), 0);
 }
+
+game_state game_state::apply_strategy(strategy_t strat) const
+{
+	auto new_fruit_count = strat(fruit_count);
+	return game_state(new_fruit_count, raven_count, turn_count+1);
+}
+
 
 }//namespace

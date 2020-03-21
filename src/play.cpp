@@ -22,7 +22,7 @@ namespace orchard
 		}
 		else if(dice.is_fruit_basket())
 		{
-			return strategy(game);
+			return game.apply_strategy(strategy);
 		}
 		else
 		{

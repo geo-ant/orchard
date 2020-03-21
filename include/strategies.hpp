@@ -12,7 +12,7 @@ namespace orchard
  * Picking strategy that picks 2 fruits in ascending
  * order of index (starting with 0).
  */
-game_state pick_fruit_in_order(const game_state & g);
+tree_array_t pick_fruit_in_order(const tree_array_t & fruit_count);
 /**
  * Picking 2 fruits at random
  */
