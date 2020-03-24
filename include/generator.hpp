@@ -37,20 +37,31 @@ public:
 	 * have invalid position. The game state is discarded in this
 	 * copmarison.
 	 */
-	bool operator==(const game_iterator &);
-	bool operator!=(const game_iterator &);
+	bool operator==(const game_iterator &) const;
+	bool operator!=(const game_iterator &) const;
 
 
 	/**
 	 * Returns a game_state that is played to
 	 * finish from the initial state.
+	 * @throws if the iterator is default
+	 * constructed or if it is an end iterator
 	 */
-	game_state operator*();
+	game_state operator*() const;
 
-	//! prefix increment: ++it
+	/**! prefix increment: ++it
+	 * @throws if it the iterator has an
+	 * invalid position (meaning it was
+	 * default constructed) or is an end iterator
+	 */
 	game_iterator operator++();
 
-	//! postfix increment: it++
+	/**
+	 * postfix increment it++
+	 * @throws if it the iterator has an
+	 * invalid position (meaning it was
+	 * default constructed) or is an end iterator
+	 */
 	game_iterator operator++(int);
 
 	/*

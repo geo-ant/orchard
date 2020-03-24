@@ -25,17 +25,17 @@ game_iterator::game_iterator(strategy_t strat, std::optional<game_state> initial
 {}
 
 
-bool game_iterator::operator ==(const game_iterator& other)
+bool game_iterator::operator ==(const game_iterator& other) const
 {
 	return position.value_or(INVALID_POSITION) == other.position.value_or(INVALID_POSITION);
 }
 
-bool game_iterator::operator !=(const game_iterator& other)
+bool game_iterator::operator !=(const game_iterator& other) const
 {
 	return !(*this==other);
 }
 
-game_state game_iterator::operator*()
+game_state game_iterator::operator*() const
 {
 	return final_state.value();
 }
