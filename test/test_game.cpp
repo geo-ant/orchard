@@ -6,10 +6,11 @@
 /**
  * Test the game_state and related functions
  */
+using namespace orchard;
+
 
 TEST_CASE("Adding ravens and picking fruit", "[game_state]")
 {
-	using namespace orchard;
 	game_state g;
 
 	REQUIRE(g.turn_count==0);
@@ -59,7 +60,6 @@ TEST_CASE("Adding ravens and picking fruit: exceptions","[game_state]")
 
 TEST_CASE("Construction of illegal game states throws exceptions", "[game_state]")
 {
-	using namespace orchard;
 	std::array<int, TREE_COUNT> legal_fruit_count{}; //will be all zero
 
 	std::array<int, TREE_COUNT> illegal_fruit_count{};
@@ -88,7 +88,6 @@ TEST_CASE("Construction of illegal game states throws exceptions", "[game_state]
 
 TEST_CASE("Classification of games as won / lost / over", "[game_state]")
 {
-	using namespace orchard;
 	std::array<int, TREE_COUNT> zero_fruit_count{}; //will be all zero
 
 	std::array<int, TREE_COUNT> nonzero_fruit_count;
@@ -116,6 +115,91 @@ TEST_CASE("Classification of games as won / lost / over", "[game_state]")
 			REQUIRE(is_won(g)==false);
 			REQUIRE(is_lost(g)==false);
 			REQUIRE(is_over(g)==false);
+	}
+
+}
+
+TEST_CASE("Constructors of game_state","[game_state]")
+{
+	SECTION("Default constructing a game state produces standard game")
+	{
+		tree_array_t expected_fruit_count;
+		std::fill(expected_fruit_count.begin(), expected_fruit_count.end(), INITIAL_FRUIT_COUNT);
+
+		auto expected_raven_count = INITIAL_RAVEN_COUNT;
+		int expected_turn_count = 0;
+
+		game_state g;
+		REQUIRE(g.turn_count == expected_turn_count);
+		REQUIRE(g.raven_count == expected_raven_count);
+		REQUIRE(g.fruit_count == expected_fruit_count);
+	}
+
+	SECTION("Constructor taking all member fields produces correct state")
+	{
+		tree_array_t fruit_count;
+		std::fill(fruit_count.begin(), fruit_count.end(), 1);
+
+		auto raven_count = 0;
+		int turn_count = 1234;
+
+		game_state g(fruit_count, raven_count, turn_count);
+
+		REQUIRE(g.turn_count == turn_count);
+		REQUIRE(g.raven_count ==raven_count);
+		REQUIRE(g.fruit_count == fruit_count);
+
+	}
+}
+
+TEST_CASE("Testing games for equality == and !=","[game_state]")
+{
+	tree_array_t fruit_A;
+	std::fill(fruit_A.begin(),fruit_A.end(),1);
+
+	tree_array_t fruit_B;
+	std::fill(fruit_B.begin(),fruit_B.end(),2);
+
+	int ravens_A = 1;
+	int ravens_B = 2;
+
+	int turns_A = 1337;
+	int turns_B = 123;
+
+	REQUIRE(fruit_A != fruit_B);
+	REQUIRE(turns_A != turns_B);
+	REQUIRE(ravens_A != ravens_B);
+
+	SECTION("Equal states compare equal")
+	{
+		game_state g1 (fruit_A, ravens_A, turns_A);
+		game_state g2 (fruit_A, ravens_A, turns_A);
+		REQUIRE(g1 == g2);
+		REQUIRE((g1!=g2)==false);
+	}
+
+	SECTION("Different fruit lead to unequality")
+	{
+		game_state g1 (fruit_A, ravens_A, turns_A);
+		game_state g2 (fruit_B, ravens_A, turns_A);
+		REQUIRE(g1 != g2);
+		REQUIRE((g1==g2)==false);
+	}
+
+	SECTION("Different ravens lead to unequality")
+	{
+		game_state g1 (fruit_A, ravens_A, turns_A);
+		game_state g2 (fruit_A, ravens_B, turns_A);
+		REQUIRE(g1 != g2);
+		REQUIRE((g1==g2)==false);
+	}
+
+	SECTION("Different turns lead to unequality")
+	{
+		game_state g1 (fruit_A, ravens_A, turns_A);
+		game_state g2 (fruit_A, ravens_A, turns_B);
+		REQUIRE(g1 != g2);
+		REQUIRE((g1==g2)==false);
 	}
 
 }

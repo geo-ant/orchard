@@ -25,7 +25,7 @@ namespace orchard
 game_state::game_state() : game_state(create_filled_array<int, TREE_COUNT>(INITIAL_FRUIT_COUNT), INITIAL_RAVEN_COUNT, 0)
 {}
 
-game_state::game_state(const std::array<int, TREE_COUNT> fruits, int ravens, int turns)
+game_state::game_state(const tree_array_t fruits, int ravens, int turns)
 : fruit_count(fruits)
 ,raven_count(ravens),
 turn_count(turns)
@@ -50,6 +50,24 @@ turn_count(turns)
 
 
 }
+
+/**
+ * Compare for equality.
+ * @returns true if all member fields compare equal
+ */
+bool game_state::operator==(const game_state& other) const
+{
+	return (turn_count == other.turn_count && raven_count == other.raven_count &&  fruit_count == other.fruit_count );
+}
+/**
+ * Compare for unequal.
+ * @returns logical negation of operator==
+ */
+bool game_state::operator!=(const game_state& other) const
+{
+	return !(*this == other);
+}
+
 
 game_state game_state::pick_fruit(size_t tree_index) const
 {

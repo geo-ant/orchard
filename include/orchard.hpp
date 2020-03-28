@@ -39,14 +39,28 @@ public:
 	 */
 	game_state();
 
-	game_state(const game_state &) = default;
-	game_state(game_state &&) = default;
-
 	/**
 	 * construct new game_state with given amount of fruits, ravens and turns
 	 * @throws underflow_error or overflow_error if values are outside legal ranges
 	 * */
-	game_state(const std::array<int, TREE_COUNT> fruits, int ravens, int turns);
+	game_state(tree_array_t fruits, int ravens, int turns);
+
+
+	game_state(const game_state &) = default;
+	game_state(game_state &&) = default;
+
+	/**
+	 * Compare for equality.
+	 * @returns true if all member fields compare equal
+	 */
+	bool operator==(const game_state&) const;
+	/**
+	 * Compare for unequal.
+	 * @returns logical negation of operator==
+	 */
+	bool operator!=(const game_state&) const;
+
+
 
 	/*
 	 * Pick one piece of fruit from a given tree.
