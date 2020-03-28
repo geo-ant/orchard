@@ -10,6 +10,10 @@ namespace orchard
 
 	game_state perform_single_turn(strategy_t strategy, const game_state & game,  dice_result dice)
 	{
+		if(is_over(game))
+		{
+			return game;
+		}
 
 		if(dice.is_tree_index())
 		{

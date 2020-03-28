@@ -13,10 +13,26 @@ namespace orchard
  * order of index (starting with 0).
  */
 tree_array_t pick_fruit_in_order(const tree_array_t & fruit_count);
+
+/**
+ * Picking strategy that picks 2 fruits consequtively
+ * and for each pick chooses the tree with the maximum
+ * amount of fruit
+ */
+tree_array_t pick_fruit_from_fullest_tree(const tree_array_t & fruit_count);
+
+/**
+ * Picking strategy that picks 2 fruits consequtively
+ * and for each pick chooses the emptiest (but nonzero)
+ * tree (i.e. the one with the least amount of fruit).
+ */
+tree_array_t pick_fruit_from_emptiest_tree(const tree_array_t & fruit_count);
+
+
 /**
  * Picking 2 fruits at random
  */
-game_state pick_fruit_at_random(const game_state & g);
+tree_array_t pick_fruit_at_random(const tree_array_t & fruit_count);
 
 }
 #endif //_STRATS_HPP_INCLUDED
