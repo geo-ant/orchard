@@ -37,8 +37,7 @@ TEST_CASE("Playing a single turn", "[dice_result]")
 
 	SECTION("Exactly one raven is added when a raven die is thrown")
 	{
-		dice_result dice(dice_result::RAVEN);
-		REQUIRE(dice.is_raven() == true);
+		dice_result_variant dice = dice_result<dice_t::RAVEN>();
 
 		auto g2 = perform_single_turn(strat, g, dice);
 
@@ -51,8 +50,8 @@ TEST_CASE("Playing a single turn", "[dice_result]")
 	{
 		for(int idx = 0; idx < orchard::TREE_COUNT; ++idx)
 		{
-			dice_result dice(idx);
-			REQUIRE(dice.is_tree_index() == true);
+			dice_result_variant dice = dice_result<dice_t::TREE_INDEX>(idx);
+
 			auto g2 = perform_single_turn(strat, g, dice);
 
 			REQUIRE(g2.get_total_fruit_count() == g.get_total_fruit_count()-1);
@@ -64,8 +63,9 @@ TEST_CASE("Playing a single turn", "[dice_result]")
 
 	SECTION("User strategy is correctly applied when fruit basket die is thrown")
 	{
-		dice_result dice(dice_result::FRUIT_BASKET);
-		REQUIRE(dice.is_fruit_basket() == true);
+		dice_result_variant dice = dice_result<dice_t::FRUIT_BASKET>();
+
+
 		auto g2 = perform_single_turn(strat, g, dice);
 
 		REQUIRE(g2.get_total_fruit_count() == g.get_total_fruit_count()-2);

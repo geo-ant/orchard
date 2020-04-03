@@ -6,61 +6,31 @@
 
 namespace orchard
 {
-dice_result::dice_result(int res): result(res)
+
+dice_result_variant create_random_dice_result()
 {
-	if(result < 0 || result > TREE_COUNT+1)
+	auto number = get_uniform_random_number<size_t>(0,(TREE_COUNT-1)+2);
+	if(number < TREE_COUNT)
 	{
-		throw std::logic_error("Dice result outside allowed range!");
+		return dice_result<dice_t::TREE_INDEX>(number);
 	}
-}
-
-dice_result dice_result::create_random()
-{
-    return dice_result(get_uniform_random_number<size_t>(0,TREE_COUNT+1));
-}
-
-bool dice_result::is_tree_index() const
-{
-	return result < TREE_COUNT;
-}
-
-bool dice_result::is_fruit_basket() const
-{
-	return result == FRUIT_BASKET;
-}
-
-bool dice_result::is_raven() const
-{
-	return result == RAVEN;
-}
-
-std::optional<int> dice_result::get_tree_index() const
-{
-	if(is_tree_index())
+	else if(number == TREE_COUNT)
 	{
-		return result;
+		return dice_result<dice_t::RAVEN>();
 	}
 	else
 	{
-		return {};
+		return dice_result<dice_t::FRUIT_BASKET>();
 	}
+
 }
 
-std::string dice_result::to_string() const
+std::string to_string(const dice_result_variant & dice)
 {
-	if(is_raven())
-	{
-		return std::string("R");
-	}
-	else if(is_fruit_basket())
-	{
-		return std::string("F");
-	}
-	else
-	{
-		return std::to_string(result);
-	}
+	auto call_to_string = [](auto && d) -> std::string {return d.to_string();};
+	return std::visit(call_to_string,dice);
 }
+
 
 }//namespace orchard
 

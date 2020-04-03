@@ -64,3 +64,8 @@ TEST_CASE("Test the in order picking strategy", "[in_order_strat]")
 	}
 
 }
+
+TEST_CASE("Test the random picking strategy","[random_strat]")
+{
+
+}

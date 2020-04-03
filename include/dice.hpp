@@ -8,6 +8,7 @@
 #include <thread>
 #include <string>
 #include <optional>
+#include <variant>
 
 class ostream; //forward declaration
 
@@ -30,55 +31,87 @@ T get_uniform_random_number(T minimum, T maximum)
 }
 
 
-class dice_result
+/**
+ * template based implementation of dice result
+ */
+
+//possible result categories for a die
+enum class dice_t {TREE_INDEX, FRUIT_BASKET,RAVEN};
+
+/**
+ * class template for a dice result
+ * the specializations below cover all cases
+ */
+template<dice_t type>
+struct dice_result
 {
-public:
-	static constexpr int FRUIT_BASKET = TREE_COUNT;
-	static constexpr int RAVEN = TREE_COUNT+1;
 
-	/**
-	 * construct a dice result corresponding
-	 * to a certain number. The numbers [0, TREE_COUNT-1]
-	 * correspond to indices, the number TREE_COUNT is the
-	 * fruit basket and the number TREE_COUNT+1 is the raven.
-	 * Constructor throws if the given number is illegal.
-	 *
-	 * Use the static member create_random() to obtain a random
-	 * dice result.
-	 *
-	 * This constructor is handy for testing.
-	 */
-	dice_result(int res);
-
-	//!returns true iff the dice result is a tree index
-	bool is_tree_index() const;
-
-	//!returns true iff the dice result is the fruit basket
-	bool is_fruit_basket() const;
-
-	//!returns true iff the dice result is a raven
-	bool is_raven() const;
-
-	//!create a random dice result
-	static dice_result create_random();
-
-	/**
-	 * Returns the index of the tree that the dice picked
-	 * if is_tree_index()==true. Otherwise throws an exception
-	 * @return the tree index iff is_tree_index() is true,
-	 * else returns nullopt.
-	 */
-	std::optional<int> get_tree_index() const;
-
-	std::string to_string() const;
-
-private:
-
-	const int result;
 };
 
-//std::ostream & operator<<(std::ostream & os, const orchard::dice_result & d);
+//! a dive throw with a raven
+template<>
+struct dice_result<dice_t::RAVEN>
+{
+	std::string to_string() const
+	{
+		return "R";
+	}
+};
 
+//! a fruit basket throw
+template<>
+struct dice_result<dice_t::FRUIT_BASKET>
+{
+	std::string to_string() const
+	{
+		return "F";
+	}
+};
+
+//! a throw corresponding to a tree index
+template<>
+struct dice_result<dice_t::TREE_INDEX>
+{
+	/**
+	 * construct dice result with
+	 * given tree index. If tree index
+	 * is invalid then the constructor
+	 * throws an exception;
+	 */
+	explicit dice_result(size_t idx) : tree_index(idx)
+	{
+		if(tree_index >= TREE_COUNT)
+		{
+			throw std::logic_error("Dice result outside allowed range!");
+		}
+	}
+
+	std::string to_string() const
+	{
+		return std::to_string(tree_index);
+	}
+
+	//! the tree index
+	const size_t tree_index;
+};
+
+
+using dice_result_variant = std::variant< dice_result<dice_t::RAVEN>,dice_result<dice_t::FRUIT_BASKET>,dice_result<dice_t::TREE_INDEX> >;
+
+/**
+ * Helper function that returns
+ * the result of the member function
+ * to_string for any stored variant
+ */
+std::string to_string(const dice_result_variant &);
+
+
+/**
+ * Creates a random throw of a die. Returns a variant of
+ * dice result (either raven, fruit basket or a result
+ * corresponding to a tree index).
+ */
+dice_result_variant create_random_dice_result();
 
 }//namespace orchard
 

@@ -100,7 +100,6 @@ tree_array_t pick_fruit_in_order(const tree_array_t & fruit_count)
 	return pick_fruit_impl(&choose_first_non_empty_tree_index,fruit_count,2);
 }
 
-
 tree_array_t pick_fruit_at_random(const tree_array_t & fruit_count)
 {
 	return pick_fruit_impl(&choose_random_tree_index,fruit_count,2);

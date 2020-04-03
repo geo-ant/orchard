@@ -7,31 +7,9 @@
 namespace orchard
 {
 
-
-	game_state perform_single_turn(strategy_t strategy, const game_state & game,  dice_result dice)
+	game_state perform_single_turn(strategy_t strategy, const game_state & game,  dice_result_variant dice)
 	{
-		if(is_over(game))
-		{
-			return game;
-		}
-
-		if(dice.is_tree_index())
-		{
-			int tree_index = dice.get_tree_index().value();
-			return (game.fruit_count.at(tree_index)>0) ? game.pick_fruit(tree_index) : game;
-		}
-		else if(dice.is_raven())
-		{
-			return game.add_raven();
-		}
-		else if(dice.is_fruit_basket())
-		{
-			return game.apply_strategy(strategy);
-		}
-		else
-		{
-			throw std::logic_error("Impossible dice result occurred!");
-		}
+		return std::visit(single_turn(strategy,game),dice);
 	}
 
 	game_state play_to_finish(strategy_t strategy, const game_state & game)
@@ -41,17 +19,38 @@ namespace orchard
 			return game;
 		}
 
-		const auto dice = dice_result::create_random();
+		const auto dice = create_random_dice_result();
 		game_state next = perform_single_turn(strategy, game, dice);
 
-#ifdef DEBUG
+	#ifdef DEBUG
 		std::cout << "(" << game << ")";
-		std::cout << " => [" << dice.to_string() << "] => ";
+		std::cout << " => [" << to_string(dice) << "] => ";
 		std::cout << "(" << next << ")" << std::endl;
-#endif
+	#endif
 
 		return play_to_finish(strategy, next);
-
 	}
+
+	/****
+	 * implementation of the visitor
+	 */
+	single_turn::single_turn(strategy_t strat, game_state g):game(g), strategy(strat)
+	{}
+
+	game_state single_turn::operator()(dice_result<dice_t::FRUIT_BASKET>)
+	{
+		return game.apply_strategy(strategy);
+	}
+
+	game_state single_turn::operator()(dice_result<dice_t::RAVEN>)
+	{
+		return game.add_raven();
+	}
+
+	game_state single_turn::operator()(dice_result<dice_t::TREE_INDEX> dice)
+	{
+		return (game.fruit_count.at(dice.tree_index)>0) ? game.pick_fruit(dice.tree_index) : game;
+	}
+
 
 }
