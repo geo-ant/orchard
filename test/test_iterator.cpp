@@ -181,7 +181,5 @@ TEST_CASE("Producing ranges with iterators","[game_iterator]")
 		int count = std::distance(begin_it, end_it);
 		REQUIRE(count == SIZE);
 	}
-	
 
-	
 }

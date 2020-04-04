@@ -15,7 +15,7 @@ namespace orchard
 	//! return true iff the game was won by the raven
 	bool is_lost(const game_state& g)
 	{
-		return g.raven_count >= MAX_RAVEN_COUNT;
+		return g.raven_count >= MAX_RAVEN_COUNT && !is_won(g);
 	}
 
 	//! return true iff the game is over (won or lost)

@@ -3,6 +3,7 @@
 #include "orchard.hpp"
 #include "dice.hpp"
 #include <algorithm>
+#include <type_traits>
 
 using namespace orchard;
 
@@ -34,18 +35,55 @@ TEST_CASE("Creating deterministic dice results", "[dice_result]")
 
 }
 
-//TEST_CASE("Creating random dice throws")
-//{
-//	/**
-//	 * This is a very crude test of randomness
-//	 * in so far that we generate a histogram
-//	 * but only perform the most basic tests
-//	 *(such that every possible dice result shoud
-//	 * at least exist once).
-//	 */
-//	//constexpr int LARGE_ISH_NUMBER = std::max(dice_result::RAVEN, dice_result::FRUIT_BASKET)*500;
-//	//std::map<int, int> histogram;
-//	//@todo: weitermachen
-//
-//
-//}
+/**
+ * helper struct for next test case
+ */
+struct dice_counter
+{
+
+	void operator()(const dice_result<dice_t::TREE_INDEX> &)
+	{
+		++tree_index_counts;
+	}
+
+	void operator()(const dice_result<dice_t::FRUIT_BASKET> &)
+	{
+		++other_counts;
+	}
+
+	void operator()(const dice_result<dice_t::RAVEN> &)
+	{
+		++other_counts;
+	}
+
+
+	float tree_index_counts = 0;
+	float other_counts = 0;
+};
+
+TEST_CASE("Creating random dice throws")
+{
+	/**
+	 * This is a VERY CRUDE test of randomness:
+	 * we only remember two outcomes:
+	 * 1) dice throw is TREE_INDEX
+	 * 2) dice throw is not TREE_INDEX
+	 * then we compare that the ratio of these
+	 * two numbers is approximately TREE_COUNT/2
+	 * and we just assume the rest of the rng
+	 * works fine by inference :)
+	 */
+
+	dice_counter counter;
+
+	for(int j = 0; j < 1000000; ++j)
+	{
+		auto dice = create_random_dice_result();
+		std::visit(counter,dice);
+	}
+
+	// it should be approximately counter.tree_index_counts/counter.other_counts = (TREE_COUNT)/2
+	REQUIRE(counter.tree_index_counts/counter.other_counts > 0.8f*0.5f*(TREE_COUNT));
+	REQUIRE(counter.tree_index_counts/counter.other_counts < 1.2f*0.5f*(TREE_COUNT));
+
+}
