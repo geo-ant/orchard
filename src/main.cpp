@@ -45,7 +45,8 @@ int main() {
 	
 	cout << "STATISTICS:" << endl;
 	cout << "Wins: " << wlstat.get_wins() << " Losses: " << wlstat.get_losses() << endl;
-
+	cout << "Average Turn count (rounded): " << wlstat.get_cumulated_turn_count()/wlstat.get_game_count() << endl;
+	cout << "(Total cumulated turns: " << wlstat.get_cumulated_turn_count() << ")" << endl;
 	//cout << g_finish << endl;
 	return 0;
 }
