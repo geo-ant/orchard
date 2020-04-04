@@ -29,7 +29,7 @@ namespace orchard
 * games are generated.
 */
 template<typename statistic_t>
-statistic_t accumulate_statistics(strategy_t strategy, size_t amount, const game_state & initial = game_state(), statistic_t initial_statistics = statistic_t())
+statistic_t accumulate_statistics(strategy_t strategy, size_t amount, statistic_t initial_statistics, const game_state & initial = game_state())
 {
 	game_generator games(strategy, initial, amount);
 	auto result = std::transform_reduce(games.cbegin(),games.cend(), initial_statistics, std::plus<statistic_t>(), [](const game_state & g){return statistic_t(g);});

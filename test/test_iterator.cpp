@@ -122,7 +122,10 @@ TEST_CASE("Dereferencing iterators", "[game_iterator]")
 		REQUIRE(*it == initial);
 	}
 	
+
 }
+
+
 
 TEST_CASE("Game generator produces correct sequences","[game_generator]")
 {
@@ -135,7 +138,7 @@ TEST_CASE("Game generator produces correct sequences","[game_generator]")
 		REQUIRE(count == LARGE_ISH_NUMBER);
 	}
 	
-	SECTION("Produces a random collection of games")
+	SECTION("Produces a random collection of games that are always over")
 	{
 		//as in the case of iterators. Just test
 		//that not all games are the same
@@ -146,8 +149,8 @@ TEST_CASE("Game generator produces correct sequences","[game_generator]")
 			if(first != *it)
 			{
 				games_are_random = true;
-				break;
 			}
+			REQUIRE(is_over(*it) == true);
 		}
 		REQUIRE(games_are_random == true);
 	}
