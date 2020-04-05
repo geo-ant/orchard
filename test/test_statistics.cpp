@@ -76,5 +76,6 @@ TEST_CASE("Win Loss Statistic", "[win_loss_stat]")
 		size_t count = 1000;
 		auto wlstat = accumulate_statistics(&pick_fruit_in_order,count,win_loss_statistic());
 		REQUIRE(wlstat.get_game_count() == count);
+		REQUIRE(wlstat.get_wins() + wlstat.get_losses() == wlstat.get_game_count());
 	}
 }

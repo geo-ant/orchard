@@ -41,7 +41,7 @@ int main() {
 
 	auto strategy = let_user_choose_strategy(strategies);
 
-	auto wlstat = accumulate_statistics(strategy,cnt,win_loss_statistic());
+	auto wlstat = accumulate_statistics_par(strategy,cnt,win_loss_statistic(), game_state());
 	
 	cout << "STATISTICS:" << endl;
 	cout << "Wins: " << wlstat.get_wins() << " Losses: " << wlstat.get_losses() << endl;
