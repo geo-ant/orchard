@@ -89,8 +89,6 @@ std::enable_if_t<detail::is_sequenced_execution_policy_v<ExecutionPolicy>,statis
 }
 
 //! parallel version of the above
-//todo: make better with execution policy as parameter
-//todo: ugly and not functional programming -> make better (divide range in number of elements)
 template<typename statistic_t, typename ExecutionPolicy>
 std::enable_if_t<detail::is_parallel_execution_policy_v<ExecutionPolicy>,statistic_t> accumulate_statistics(ExecutionPolicy && policy, strategy_t strategy, size_t amount, statistic_t initial_statistics, const game_state initial = game_state())
 {
