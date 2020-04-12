@@ -13,7 +13,7 @@ CC=g++
 LD=g++
 CFLAGS=-c -Wall -std=c++17
 OPTIM_LEVEL = -O2
-LFLGAS= -lpthread
+LFLGAS= -lpthread -ltbb -std=c++17
 DFLAGS=-g3 -O0 -c -DDEBUG -Wall -std=c++17
 INCFLAGS=-I$(INC_DIR)
 
@@ -31,7 +31,7 @@ debug: CFLAGS+=$(DFLAGS)
 debug: all
 
 $(BIN_DIR)/$(APP): $(OBJECTS) | $(BIN_DIR)
-	$(LD) -o $@ $^ $(LFLGAS)
+	$(LD) -o $@ $^ $(LFLGAS) 
 
 $(OBJ_DIR)/%.o: | $(OBJ_DIR)
 	$(CC) $(CFLAGS) $(INCFLAGS) -o $@ $<

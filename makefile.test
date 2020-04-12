@@ -1,9 +1,3 @@
-ifneq ($(MAKECMDGOALS),test)
-APP=orchard
-else
-APP=test
-endif
-
 SRC_DIR=src
 TEST_SRC_DIR=test
 INC_DIR=include
@@ -15,7 +9,7 @@ CC=g++
 LD=g++
 CFLAGS=-c -Wall -std=c++17
 OPTIM_LEVEL = -O2
-LFLGAS=
+LFLAGS= -lpthread -ltbb
 DFLAGS=-g3 -O0 -c -DDEBUG -Wall -std=c++17
 INCFLAGS=-I$(INC_DIR)
 
@@ -26,12 +20,12 @@ TEST_SOURCES:=$(notdir $(NON_MAIN_SOURCES) $(TEST_DIR_SOURCES)) # this will be f
 TEST_OBJECTS:=$(patsubst %.cpp,$(OBJ_DIR)/%.o,$(TEST_SOURCES)) # this will be obj/func.o obj/unit.o obj/global.o
 
 .PHONY: all
-all:CFLAGS+=$(OPTIM_LEVEL) -DMAKE_TESTS
+all:CFLAGS+=$(OPTIM_LEVEL)
 all: $(BIN_DIR)/test
 
 $(BIN_DIR)/test: $(TEST_OBJECTS)
 	mkdir -p $(@D)
-	$(LD) $(LFLAGS) -o $@ $^
+	$(LD) -o $@ $^ $(LFLAGS) 
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp
 	mkdir -p $(@D)

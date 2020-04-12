@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <exception>
+#include <chrono>
 #include "orchard.hpp"
 #include "strategies.hpp"
 #include "generator.hpp"
@@ -20,6 +21,8 @@ struct named_strategy
 
 //!let user choose a strategy from a vector of strats
 orchard::strategy_t let_user_choose_strategy(const std::vector<named_strategy> &);
+
+
 
 int main() {
 	using std::cout;
@@ -41,12 +44,17 @@ int main() {
 
 	auto strategy = let_user_choose_strategy(strategies);
 
-	auto wlstat = accumulate_statistics_par(strategy,cnt,win_loss_statistic(), game_state());
+	auto execution_policy = std::execution::par;
+
+	auto start_time = std::chrono::system_clock::now();
+	auto wlstat = accumulate_statistics(execution_policy,strategy,cnt,win_loss_statistic(), game_state());
+	auto end_time = std::chrono::system_clock::now();
 	
 	cout << "STATISTICS:" << endl;
 	cout << "Wins: " << wlstat.get_wins() << " Losses: " << wlstat.get_losses() << endl;
 	cout << "Average Turn count (rounded): " << wlstat.get_cumulated_turn_count()/wlstat.get_game_count() << endl;
 	cout << "(Total cumulated turns: " << wlstat.get_cumulated_turn_count() << ")" << endl;
+	cout << "Calculation took " << std::chrono::duration_cast<std::chrono::milliseconds>(end_time - start_time).count() << " ms" << endl;
 	//cout << g_finish << endl;
 	return 0;
 }
