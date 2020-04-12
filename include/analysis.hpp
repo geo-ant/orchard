@@ -51,9 +51,9 @@ namespace detail
 	}
 
 
-	//! true iff the given execution policy is of class std::execution::parallel_policy
+	//! true iff the given execution policy is of class std::execution::parallel_policy or parallel_unsequenced_policy
 	template<typename T>
-	constexpr bool is_parallel_execution_policy_v = std::is_same_v<std::remove_cv_t<std::remove_reference_t<T>>,std::execution::parallel_policy>;
+	constexpr bool is_parallel_execution_policy_v = std::is_same_v<std::remove_cv_t<std::remove_reference_t<T>>,std::execution::parallel_policy> || std::is_same_v<std::remove_cv_t<std::remove_reference_t<T>>,std::execution::parallel_unsequenced_policy>;
 
 	//! true iff the given execution policy is of class std::execution::sequenced_policy
 	template<typename T>
@@ -84,7 +84,7 @@ template<typename statistic_t, typename ExecutionPolicy>
 std::enable_if_t<detail::is_sequenced_execution_policy_v<ExecutionPolicy>,statistic_t> accumulate_statistics(ExecutionPolicy && policy, strategy_t strategy, size_t amount, statistic_t initial_statistics, const game_state initial = game_state())
 {
 	game_generator games(strategy, initial, amount);
-	auto result = std::transform_reduce(games.cbegin(),games.cend(), initial_statistics, std::plus<statistic_t>(), [](const game_state & g){return statistic_t(g);});
+	auto result = std::transform_reduce(std::execution::seq,games.cbegin(),games.cend(), initial_statistics, std::plus<statistic_t>(), [](const game_state & g){return statistic_t(g);});
 	return result;
 }
 
@@ -103,7 +103,7 @@ std::enable_if_t<detail::is_parallel_execution_policy_v<ExecutionPolicy>,statist
 	auto amount_per_thread = detail::create_partition(amount, nthreads);
 	auto accumulate_statistics_for_amount = [strategy,initial_statistics,initial](size_t count){return accumulate_statistics<statistic_t>(std::execution::seq,strategy,count,initial_statistics,initial);};
 
-	statistic_t result_stat = std::transform_reduce(std::execution::par, amount_per_thread.begin(), amount_per_thread.end(), initial_statistics, std::plus<statistic_t>(), accumulate_statistics_for_amount);
+	statistic_t result_stat = std::transform_reduce(policy, amount_per_thread.begin(), amount_per_thread.end(), initial_statistics, std::plus<statistic_t>(), accumulate_statistics_for_amount);
 
 	return result_stat;
 }
