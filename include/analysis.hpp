@@ -10,7 +10,6 @@
 #include <future>
 #include <execution>
 #include <exception>
-//#include <execution>
 
 namespace orchard
 {
@@ -44,8 +43,11 @@ namespace detail
 		}
 		else
 		{
-			partition = std::vector<IntegralType>(M-1,N/M);
-			partition.push_back(N/M+N%M);
+			//partition = std::vector<IntegralType>(M-1,N/M);
+			//partition.push_back(N/M+N%M);
+			partition = std::vector<IntegralType>(M-1,N/(M-1));
+			partition.push_back(N%(M-1));
+
 		}
 		return partition;
 	}
@@ -99,13 +101,51 @@ std::enable_if_t<detail::is_parallel_execution_policy_v<ExecutionPolicy>,statist
 	{
 		return accumulate_statistics<statistic_t>(std::execution::seq,strategy,amount,initial_statistics,initial);
 	}
+	//1) more functional style (~850 ms for 10^6 elements with pick in order)
+//	auto amount_per_thread = detail::create_partition(amount, nthreads);
+//	auto accumulate_statistics_for_amount = [strategy,initial_statistics,initial](size_t count){return accumulate_statistics<statistic_t>(std::execution::seq,strategy,count,initial_statistics,initial);};
+//
+//	statistic_t result_stat = std::transform_reduce(policy, amount_per_thread.begin(), amount_per_thread.end(), initial_statistics, std::plus<statistic_t>(), accumulate_statistics_for_amount);
+//
+//	return result_stat;
 
+
+//  //2) for loop with std::async (~380 ms for 10^6 elements with pick in order)
+//	std::vector<std::future<statistic_t>> results;
+//	for(size_t j = 0; j < nthreads-1; ++j)
+//	{
+//		results.push_back(std::async(std::launch::async,accumulate_statistics<statistic_t,std::execution::sequenced_policy>,std::execution::seq,strategy,amount/(nthreads-1),initial_statistics,initial));
+//	}
+//	results.push_back(std::async(std::launch::async,accumulate_statistics<statistic_t,std::execution::sequenced_policy>,std::execution::seq,strategy,amount%(nthreads-1),initial_statistics,initial));
+//
+//	statistic_t result_stat = std::transform_reduce(results.begin(),results.end(),initial_statistics,std::plus<statistic_t>(),[](std::future<statistic_t> & f){return f.get();});
+//	return result_stat;
+
+
+//	//3) solution using openmp: (~370 ms for 10^6 elements with pick in order)
+//	std::vector<statistic_t> results(nthreads);
+//	#pragma omp parallel for
+//	for(size_t j = 0; j < nthreads-1; ++j)
+//	{
+//			results[j] = accumulate_statistics<statistic_t>(std::execution::seq,strategy,amount/(nthreads-1),initial_statistics,initial);
+//	}
+//	results[nthreads-1] =accumulate_statistics<statistic_t>(std::execution::seq,strategy,amount%(nthreads-1),initial_statistics,initial);
+//	statistic_t result_stat = std::reduce(results.begin(),results.end(), initial_statistics);
+//	return result_stat;
+
+	//4) separate transform and reduce and cache the results (~380 ms for 10^6 elements with pick in order)
+	// see here https://mariusbancila.ro/blog/2018/05/22/transform-and-reduce-alternatives/
+	//for some benchmarks on transform_reduce vs transform then reduce
 	auto amount_per_thread = detail::create_partition(amount, nthreads);
 	auto accumulate_statistics_for_amount = [strategy,initial_statistics,initial](size_t count){return accumulate_statistics<statistic_t>(std::execution::seq,strategy,count,initial_statistics,initial);};
 
-	statistic_t result_stat = std::transform_reduce(policy, amount_per_thread.begin(), amount_per_thread.end(), initial_statistics, std::plus<statistic_t>(), accumulate_statistics_for_amount);
+	std::vector<statistic_t> result_vector(nthreads);
+	std::transform(policy, amount_per_thread.cbegin(), amount_per_thread.cend(), result_vector.begin(), accumulate_statistics_for_amount);
+
+	auto result_stat = std::reduce(policy, result_vector.begin(), result_vector.end(), initial_statistics);
 
 	return result_stat;
+
 }
 	 
 } //namespace orchard

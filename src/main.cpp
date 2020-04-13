@@ -22,8 +22,6 @@ struct named_strategy
 //!let user choose a strategy from a vector of strats
 orchard::strategy_t let_user_choose_strategy(const std::vector<named_strategy> &);
 
-
-
 int main() {
 	using std::cout;
 	using std::cin;

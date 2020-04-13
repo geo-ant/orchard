@@ -12,8 +12,8 @@ BIN_DIR=bin
 CC=g++
 LD=g++
 CFLAGS=-c -Wall -std=c++17
-OPTIM_LEVEL = -O3 -march=native -msse4 -mmmx
-LFLGAS= -lpthread -ltbb -std=c++17
+OPTIM_LEVEL = -O3 -march=native -msse4 -mmmx -fopenmp
+LFLGAS= -lpthread -ltbb -std=c++17 -lgomp
 DFLAGS=-g3 -O0 -c -DDEBUG -Wall -std=c++17
 INCFLAGS=-I$(INC_DIR)
 
